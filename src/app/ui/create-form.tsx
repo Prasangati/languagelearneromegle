@@ -1,11 +1,12 @@
 'use client';
+
 import Link from 'next/link';
 import { useActionState } from 'react';
-
+import { registerUserPreferences, State } from '@/app/lib/actions';
 
 export default function Form() {
   const initialState: State = { message: null, errors: {} };
-   const [state, formAction] = useActionState(registerUserPreferences, initialState);
+  const [state, formAction] = useActionState(registerUserPreferences, initialState);
   return (
     <form action={formAction}>
       {/* Learn or Teach */}
