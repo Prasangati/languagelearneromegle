@@ -1,16 +1,15 @@
 'use client';
 
-import Link from 'next/link';
-import { useActionState } from 'react';
+import { useFormState } from 'react-dom';
 import { registerUserPreferences, State } from '@/app/lib/actions';
 
 export default function Form() {
   const initialState: State = { message: null, errors: {} };
-  const [state, formAction] = useActionState(registerUserPreferences, initialState);
+  const [_state, formAction] = useFormState(registerUserPreferences, initialState);
   return (
     <form action={formAction}>
       {/* Learn or Teach */}
-<div className="mb-4">
+<div className="mb-4 text-gray-800">
   <label className="mb-2 block text-sm font-medium">Are you here to:</label>
   <div className="flex gap-4">
     <label className="flex items-center gap-2 text-sm">
@@ -37,7 +36,7 @@ export default function Form() {
 </div>
 
 {/* Language to Learn or Teach */}
-<div className="mb-4">
+<div className="mb-4 text-gray-800">
   <label htmlFor="targetLanguage" className="mb-2 block text-sm font-medium">
     Which language do you want to learn or teach?
   </label>
@@ -63,7 +62,7 @@ export default function Form() {
 </div>
 
 {/* Languages you can communicate in */}
-<div className="mb-4">
+<div className="mb-4 text-gray-800">
   <label htmlFor="fluentLanguages" className="mb-2 block text-sm font-medium">
     Which language(s) can you efficiently communicate in?
   </label>
