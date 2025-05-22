@@ -1,22 +1,19 @@
 'use server';
 
-export type State = {
-  message: string | null;
-  errors?: {
-    intent?: string[];
-    targetLanguage?: string[];
-    fluentLanguages?: string[];
-  };
-};
+import { saveToDatabaseOrQueue } from '@/app/preferences/db';
+import type { State } from '@/app/preferences/definitions';
 
+// ✅ Actual logic function
 export async function registerUserPreferences(formData: FormData): Promise<State> {
-  const intent = formData.get('intent')?.toString().trim();
-  const targetLanguage = formData.get('targetLanguage')?.toString().trim();
+  const intentRaw = formData.get('intent');
+  const targetLanguageRaw = formData.get('targetLanguage');
+
+  const intent = typeof intentRaw === 'string' ? intentRaw.trim() : '';
+  const targetLanguage = typeof targetLanguageRaw === 'string' ? targetLanguageRaw.trim() : '';
   const fluentLanguages = formData.getAll('fluentLanguages').map(String);
 
   const errors: State['errors'] = {};
 
-  // Simple validation
   if (!intent || !['learn', 'teach'].includes(intent)) {
     errors.intent = ['Please choose whether you want to learn or teach.'];
   }
@@ -36,14 +33,17 @@ export async function registerUserPreferences(formData: FormData): Promise<State
     };
   }
 
-  // Placeholder for future DB storage or pairing logic
-  console.log('User submitted:', {
-    intent,
-    targetLanguage,
-    fluentLanguages,
-  });
+  await saveToDatabaseOrQueue({ intent, targetLanguage, fluentLanguages });
 
   return {
-    message: 'Preferences saved! Waiting for a match...',
+    message: 'Preferences saved! We’ll match you soon.',
   };
+}
+
+//  Reducer-compatible function for useFormState
+export async function registerUserPreferencesReducer(
+  _state: State,
+  formData: FormData
+): Promise<State> {
+  return await registerUserPreferences(formData);
 }

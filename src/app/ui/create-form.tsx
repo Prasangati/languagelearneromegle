@@ -1,7 +1,8 @@
 'use client';
 
 import { useFormState } from 'react-dom';
-import { registerUserPreferences, State } from '@/app/lib/actions';
+import {registerUserPreferencesReducer} from "@/app/lib/actions";
+impo
 
 export default function Form() {
   const initialState: State = { message: null, errors: {} };
